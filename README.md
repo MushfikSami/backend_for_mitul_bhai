@@ -1,4 +1,4 @@
-```markdown
+
 # Mitul Bhai Backend API
 
 A robust, production-ready backend application built with FastAPI and PostgreSQL. This API features a complete authentication system utilizing JSON Web Tokens (JWT) with both short-lived access tokens and long-lived refresh tokens, all fully containerized with Docker.
