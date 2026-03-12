@@ -5,6 +5,7 @@ from db import models
 from db.database import get_db
 from core import security
 from schemas.schemas import UserResponse, UserCreate, Token, TokenRefreshRequest
+from fastapi.security import OAuth2PasswordRequestForm
 import jwt
 
 router=APIRouter()
@@ -26,9 +27,9 @@ def register(user:UserCreate,db:Session=Depends(get_db)):
 
 
 @router.post('/login',response_model=Token)
-def login(user:UserCreate,db:Session=Depends(get_db)):
-    user_model=db.query(models.User).filter(models.User.email==user.email).first()
-    if not user_model or not security.verify_password(user.password,user_model.hashed_password):
+def login(form_data:OAuth2PasswordRequestForm=Depends(),db:Session=Depends(get_db)):
+    user_model=db.query(models.User).filter(models.User.email==form_data.username).first()
+    if not user_model or not security.verify_password(form_data.password,user_model.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail='Invalid email or password')
     
     access_token=security.create_access_token(data={'sub':user_model.email})
