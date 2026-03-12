@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-
+from core.security import get_current_user
 from db import models
 from db.database import get_db
 from core import security
@@ -59,3 +59,9 @@ def refresh_token(request:TokenRefreshRequest,db:Session=Depends(get_db)):
     access_token=security.create_access_token(data={'sub':user_model.email})
     refresh_token=security.create_refresh_token(data={'sub':user_model.email})
     return {'access_token':access_token,'refresh_token':refresh_token,'token_type':'bearer'}
+
+
+
+@router.get('/mitul')
+def mitul(current_user: models.User = Depends(get_current_user)):
+    return {'message':'Hello Mitul! You are authenticated.'}
